@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sequence Search</title>
+  <style>
+    body {
+      background-color: #3f3f3f;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ffffff;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #00ff00;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+    }
+    #results {
+      margin-top: 20px;
+      padding: 10px;
+      background: #2a2a2a;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Sequence Search</h1>
+  <input type="text" id="searchInput" placeholder="Enter sequence (e.g. 12-34-56)">
+  <button onclick="searchSequence()">Search</button>
+
+  <div id="results"></div>
+
+  <script>
+    let data = [];
+
+    // Load CSV from GitHub raw link
+    async function loadData() {
+      const url = "https://raw.githubusercontent.com/YOUR_USERNAME/sequence-search/main/data.csv"; // update with your repo
+      const response = await fetch(url);
+      const text = await response.text();
+
+      // Parse CSV
+      const rows = text.trim().split("\n").map(r => r.split(","));
+      rows.shift(); // remove header row
+
+      data = rows.map(row => ({
+        sequence: row[0].trim(),
+        date: row[1].trim()
+      }));
+    }
+
+    function searchSequence() {
+      const query = document.getElementById('searchInput').value.trim();
+      const resultsDiv = document.getElementById('results');
+
+      if (!query) {
+        resultsDiv.innerHTML = "<p>Please enter a sequence.</p>";
+        return;
+      }
+
+      const matches = data.filter(item => item.sequence === query);
+
+      if (matches.length > 0) {
+        let output = `<h3>Results for ${query}:</h3><ul>`;
+        matches.forEach(match => {
+          output += `<li>${match.date}</li>`;
+        });
+        output += "</ul>";
+        resultsDiv.innerHTML = output;
+      } else {
+        resultsDiv.innerHTML = `<p>No results found for "${query}".</p>`;
+      }
+    }
+
+    // Load data on page load
+    loadData();
+  </script>
+
+</body>
+</html>
