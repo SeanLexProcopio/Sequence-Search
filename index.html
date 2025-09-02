@@ -25,6 +25,25 @@
       background: #2a2a2a;
       border-radius: 5px;
     }
+    #allEntries {
+      margin-top: 20px;
+      max-height: 300px;   /* adjust as you like */
+      overflow-y: scroll;
+      background: #2a2a2a;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: left;
+    }
+    #allEntries ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    #allEntries li {
+      padding: 5px 0;
+      border-bottom: 1px solid #555;
+    }
+
   </style>
 </head>
 <body>
@@ -34,6 +53,10 @@
   <button onclick="searchSequence()">Search</button>
 
   <div id="results"></div>
+
+  <h2>Previous Winning Sequences of the Washinton State Lottery</h2>
+  <div id="allEntries"></div>
+
 
   <script>
     let data = [];
@@ -52,6 +75,15 @@
         sequence: row[0].trim(),
         date: row[1].trim()
       }));
+
+      // Build scrollable list
+      const allEntriesDiv = document.getElementById('allEntries');
+      let listHTML = "<ul>";
+      data.forEach(item => {
+        listHTML += `<li><strong>${item.sequence}</strong> — ${item.date}</li>`;
+      });
+      listHTML += "</ul>";
+      allEntriesDiv.innerHTML = listHTML;
     }
 
     function searchSequence() {
